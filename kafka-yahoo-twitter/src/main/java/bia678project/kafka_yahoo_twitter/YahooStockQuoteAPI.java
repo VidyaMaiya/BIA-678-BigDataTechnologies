@@ -9,7 +9,7 @@ import yahoofinance.quotes.stock.StockQuote;
 
 public class YahooStockQuoteAPI {
 	public static void main(String[] args) throws IOException {
-		String[] symbols = new String[] {"INTC", "BABA", "TSLA", "AIR.PA", "GOOG"};
+		String[] symbols = new String[] {"INTC", "BABA", "TSLA", "AIR.PA", "GOOG","MSFT"};
 		Map<String, Stock> stocks = YahooFinance.get(symbols);
 		
 		Stock stock1 = stocks.get("INTC");
@@ -41,5 +41,12 @@ public class YahooStockQuoteAPI {
 	    System.out.println("Price: " + sq3.getPrice());
 	    System.out.println("Date: " + sq3.getLastTradeTime().getTime());
 		
+	    
+		Stock stock4 = stocks.get("MSFT");
+		StockQuote msft = stock4.getQuote();
+		System.out.println("-----MSFT-----");
+	    System.out.println("Symbol: " + msft.getSymbol());
+	    System.out.println("Price: " + msft.getPrice());
+	    System.out.println("Date: " + msft.getLastTradeTime().getTime());
 	}
 }

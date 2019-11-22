@@ -1,6 +1,5 @@
 package bia678project.kafka_yahoo_twitter;
 
-
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -27,12 +26,14 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
-/**
- * Hello world!
- *
- */
 public class TwitterProducer {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
+
+	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
+	String consumerSecret = "WW7aWlIdp1XKVgklPgVfMbJG1ROSG0QxyHgPc8N7SIqSdZmLrq";
+	String token = "828212092666720257-1XdAnwQyEmI4jjO2TnDOqifN8s31iWg";
+	String secret = "mwCm05P96lTF9uLiomS1cKJnFQbIuJ0GMdczCzAVABHbB";
+	List<String> terms = Lists.newArrayList("stock","price"); //following terms in twiiter
 
 	public TwitterProducer() {
 
@@ -46,8 +47,7 @@ public class TwitterProducer {
 		logger.info("Setup");
 		/**
 		 * Set up your blocking queues: Be sure to size these properly based on expected
-		 * TPS of your stream
-		 * Client will put the message into msgQueue
+		 * TPS of your stream Client will put the message into msgQueue
 		 */
 		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(1000);
 
@@ -57,8 +57,8 @@ public class TwitterProducer {
 
 		// Create a kafka producer
 		KafkaProducer<String, String> producer = createKafkaProducer();
-		
-		//add a shutdown hook
+
+		// add a shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			logger.info("stopping application");
 			logger.info("Shutting down twitter client");
@@ -78,9 +78,9 @@ public class TwitterProducer {
 				client.stop();
 			}
 			if (msg != null) {
-				//Send twitter feeds to kafka producer
+				// Send twitter feeds to kafka producer
 				logger.info(msg);
-				producer.send(new ProducerRecord<String, String>("twitter tweets", null, msg), new Callback() {
+				producer.send(new ProducerRecord<String, String>("twitter_tweets", null, msg), new Callback() {
 
 					@Override
 					public void onCompletion(RecordMetadata metadata, Exception exception) {
@@ -94,12 +94,6 @@ public class TwitterProducer {
 		}
 		logger.info("End of application");
 	}
-
-	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
-	String consumerSecret = "WW7aWlIdp1XKVgklPgVfMbJG1ROSG0QxyHgPc8N7SIqSdZmLrq";
-	String token = "828212092666720257-1XdAnwQyEmI4jjO2TnDOqifN8s31iWg";
-	String secret = "mwCm05P96lTF9uLiomS1cKJnFQbIuJ0GMdczCzAVABHbB";
-	List<String> terms = Lists.newArrayList("stock price");
 
 	public Client createTwitterClient(BlockingQueue<String> msgQueue) {
 
@@ -116,7 +110,8 @@ public class TwitterProducer {
 		// These secrets should be read from a config file
 		Authentication hosebirdAuth = new OAuth1(consumerKey, consumerSecret, token, secret);
 
-		//Craete client, which connects to STREAM_HOST, for authentication use hosebirdAuth
+		// Craete client, which connects to STREAM_HOST, for authentication use
+		// hosebirdAuth
 		ClientBuilder builder = new ClientBuilder().name("Hosebird-Client-01") // optional: mainly for the logs
 				.hosts(hosebirdHosts).authentication(hosebirdAuth).endpoint(hosebirdEndpoint)
 				.processor(new StringDelimitedProcessor(msgQueue)); // optional: use this if you want to process client
@@ -129,6 +124,7 @@ public class TwitterProducer {
 
 	public KafkaProducer<String, String> createKafkaProducer() {
 		String bootstrapServers = "127.0.0.1:9092";
+		
 		// Create Producer Properties
 		Properties properties = new Properties();
 		properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -140,4 +136,3 @@ public class TwitterProducer {
 		return producer;
 	}
 }
-

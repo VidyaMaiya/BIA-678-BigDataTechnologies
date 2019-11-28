@@ -1,5 +1,8 @@
 package bia678project.kafka_yahoo_twitter;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -28,12 +31,11 @@ import com.twitter.hbc.httpclient.auth.OAuth1;
 
 public class TwitterProducer implements Runnable {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
-
-	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
-	String consumerSecret = "WW7aWlIdp1XKVgklPgVfMbJG1ROSG0QxyHgPc8N7SIqSdZmLrq";
-	String token = "828212092666720257-1XdAnwQyEmI4jjO2TnDOqifN8s31iWg";
-	String secret = "mwCm05P96lTF9uLiomS1cKJnFQbIuJ0GMdczCzAVABHbB";
-	List<String> terms = Lists.newArrayList("stock","price"); //following terms in twiiter
+	String consumerKey;
+	String consumerSecret;
+	String token;
+	String secret;
+	List<String> terms = Lists.newArrayList("stock", "price"); // following terms in twiiter
 
 	public TwitterProducer() {
 		System.out.println("Starting Twitter Task");
@@ -44,6 +46,9 @@ public class TwitterProducer implements Runnable {
 //	}
 
 	public void run() {
+		//Read twitter config file
+		readTwitterConfigProperties();
+		
 		logger.info("Setup");
 		/**
 		 * Set up your blocking queues: Be sure to size these properly based on expected
@@ -95,6 +100,21 @@ public class TwitterProducer implements Runnable {
 		logger.info("End of application");
 	}
 
+	public void readTwitterConfigProperties() {
+		try 
+		{
+			InputStream input = new FileInputStream("./config.properties");
+			Properties twitterProps = new Properties();
+			twitterProps.load(input);
+			consumerKey = twitterProps.getProperty("CONSUMER_KEY");
+			consumerSecret = twitterProps.getProperty("CONSUMER_SECRET");
+			token = twitterProps.getProperty("TOKEN");
+			secret = twitterProps.getProperty("SECRET");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Client createTwitterClient(BlockingQueue<String> msgQueue) {
 
 		/**
@@ -124,7 +144,7 @@ public class TwitterProducer implements Runnable {
 
 	public KafkaProducer<String, String> createKafkaProducer() {
 		String bootstrapServers = "127.0.0.1:9092";
-		
+
 		// Create Producer Properties
 		Properties properties = new Properties();
 		properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

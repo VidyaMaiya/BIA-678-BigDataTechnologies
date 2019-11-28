@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KafkaConsumerThread implements Runnable {
-	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
+	Logger logger = LoggerFactory.getLogger(KafkaConsumerThread.class.getName());
 	private String topicName;
 	private String groupId;
 

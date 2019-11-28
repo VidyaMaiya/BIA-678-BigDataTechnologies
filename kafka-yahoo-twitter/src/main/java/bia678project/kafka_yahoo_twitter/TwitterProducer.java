@@ -26,7 +26,7 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
-public class TwitterProducer {
+public class TwitterProducer implements Runnable {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
 
 	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
@@ -36,12 +36,12 @@ public class TwitterProducer {
 	List<String> terms = Lists.newArrayList("stock","price"); //following terms in twiiter
 
 	public TwitterProducer() {
-
+		System.out.println("Starting Twitter Task");
 	}
 
-	public static void main(String[] args) {
-		new TwitterProducer().run();
-	}
+//	public static void main(String[] args) {
+//		new TwitterProducer().run();
+//	}
 
 	public void run() {
 		logger.info("Setup");

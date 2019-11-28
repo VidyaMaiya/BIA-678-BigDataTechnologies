@@ -19,15 +19,16 @@ import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.quotes.stock.StockQuote;
 
-public class YahooStockQuoteAPI {
+public class YahooStockQuoteAPI implements Runnable {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
 
 	YahooStockQuoteAPI() {
+		System.out.println("Starting Yahoo task");
 	}
 
-	public static void main(String[] args) {
-		new YahooStockQuoteAPI().run();
-	}
+//	public static void main(String[] args) {
+//		new YahooStockQuoteAPI().run();
+//	}
 
 	public void run() {
 		List<List<String>> yahooStockQuote = new YahooStockQuoteAPI().getYahooStockQuote();

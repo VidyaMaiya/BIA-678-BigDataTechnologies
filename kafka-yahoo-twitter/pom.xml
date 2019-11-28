@@ -1,43 +1,118 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>bia678project</groupId>
-  <artifactId>kafka-yahoo-twitter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>bia678project</groupId>
+	<artifactId>kafka-yahoo-twitter</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>kafka-yahoo-twitter</name>
-  <url>http://maven.apache.org</url>
+	<name>kafka-yahoo-twitter</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
-  <build>
-	<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.8.0</version>
-			<configuration>
-				<source>1.8</source>
-				<target>1.8</target>
-				<!-- <encoding>${project.build.sourceEncoding}</encoding> -->
-				<showDeprecation>true</showDeprecation>
-			</configuration>
-		</plugin>
-	</plugins>
- </build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Where to distribute jar files (using mvn package). -->
+		<server.home>${user.home}</server.home>
+		<server.testdir>${server.home}/tmp/bia678/twitter-yahoo</server.testdir>
+		<server.dist>${server.testdir}</server.dist>
+		<server.name>kafka</server.name>
+	</properties>
+	<build>
+	<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<!-- <encoding>${project.build.sourceEncoding}</encoding> -->
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<!-- Use this for "mvn exec:java" for testing -->
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>bia678project.kafka_yahoo_twitter.MainStreaming</mainClass>
+					<!-- <arguments> <argument></argument> </arguments> -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<!-- Needed to merge create a self-contained jersey/grizzly jar file, 
+					when there may be multiple implementations of a service, subject to runtime 
+					mapping. -->
+				<version>2.1</version>
+				<configuration>
+					<transformers>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+							<manifestEntries>
+								<Main-Class>bia678project.kafka_yahoo_twitter.MainStreaming</Main-Class>
+								<Build-Number>1</Build-Number>
+							</manifestEntries>
+						</transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+					</transformers>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete file="${server.dist}/${server.name}.jar" />
+								<copy
+									file="${project.build.directory}/${project.build.finalName}.jar"
+									tofile="${server.dist}/${server.name}.jar" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
@@ -61,5 +136,5 @@
 			<artifactId>YahooFinanceAPI</artifactId>
 			<version>3.12.3</version>
 		</dependency>
-  </dependencies>
+	</dependencies>
 </project>

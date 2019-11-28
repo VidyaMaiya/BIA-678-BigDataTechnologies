@@ -31,15 +31,15 @@ public class YahooStockQuoteAPI implements Runnable {
 //	}
 
 	public void run() {
-		List<List<String>> yahooStockQuote = new YahooStockQuoteAPI().getYahooStockQuote();
+		List<String> yahooStockQuote = new YahooStockQuoteAPI().getYahooStockQuote();
 
 		// Create a kafka producer
-		KafkaProducer<String, List<String>> producer = createKafkaProducer();
+		KafkaProducer<String, String> producer = createKafkaProducer();
 
-		for (List<String> stock : yahooStockQuote) {
+		for (String stock : yahooStockQuote) {
 			if (!stock.isEmpty()) {
 				logger.info(stock.toString());
-				producer.send(new ProducerRecord<String, List<String>>("yahoo_stock_quote", null, stock),
+				producer.send(new ProducerRecord<String, String>("yahoo_stock_quote", null, stock),
 						new Callback() {
 
 							@Override
@@ -56,9 +56,8 @@ public class YahooStockQuoteAPI implements Runnable {
 		logger.info("End of application");
 	}
 
-	public List<List<String>> getYahooStockQuote() {
-		List<List<String>> yahooStockQuote = new ArrayList<List<String>>();
-		List<String> companyStockQuote = new ArrayList<String>();
+	public List<String> getYahooStockQuote() {
+		List<String> yahooStockQuote = new ArrayList<String>();
 
 		String[] symbols = new String[] { "INTC", "BABA", "TSLA", "AIR.PA", "GOOG", "MSFT" };
 		Map<String, Stock> stocks = null;
@@ -73,45 +72,45 @@ public class YahooStockQuoteAPI implements Runnable {
 		StockQuote intcSq = intc.getQuote();
 		String intcQuote = "{Symbol: " + intcSq.getSymbol() + ", Price:" + intcSq.getPrice() + ", Date: "
 				+ intcSq.getLastTradeTime().getTime() + "} \n";
-		companyStockQuote.add(intcQuote);
-
+		
+		yahooStockQuote.add(intcQuote);
+		
 		Stock baba = stocks.get("BABA");
 		StockQuote babaSq = baba.getQuote();
 		String babaQuote = "{Symbol: " + babaSq.getSymbol() + ", Price:" + babaSq.getPrice() + ", Date: "
 				+ babaSq.getLastTradeTime().getTime() + "}\n";
-		companyStockQuote.add(babaQuote);
+		yahooStockQuote.add(babaQuote);
 
 		Stock tsla = stocks.get("TSLA");
 		StockQuote tslaSq = tsla.getQuote();
 		String tslaQuote = "{Symbol: " + tslaSq.getSymbol() + ", Price:" + tslaSq.getPrice() + ", Date: "
 				+ tslaSq.getLastTradeTime().getTime() + "}\n";
-		companyStockQuote.add(tslaQuote);
+		yahooStockQuote.add(tslaQuote);
 
 		Stock airpa = stocks.get("AIR.PA");
 		StockQuote airpaSq = airpa.getQuote();
 		String airpaQuote = "{Symbol: " + airpaSq.getSymbol() + ", Price:" + airpaSq.getPrice() + ", Date: "
 				+ airpaSq.getLastTradeTime().getTime() + "}\n";
-		companyStockQuote.add(airpaQuote);
+		yahooStockQuote.add(airpaQuote);
 
 		Stock google = stocks.get("GOOG");
 		StockQuote googleSq = google.getQuote();
 		String googleQuote = "{Symbol: " + googleSq.getSymbol() + ", Price:" + googleSq.getPrice() + ", Date: "
 				+ googleSq.getLastTradeTime().getTime() + "}\n";
-		companyStockQuote.add(googleQuote);
+		yahooStockQuote.add(googleQuote);
 
 		Stock msft = stocks.get("MSFT");
 		StockQuote msftSq = msft.getQuote();
 		String msftQuote = "{Symbol: " + msftSq.getSymbol() + ", Price:" + msftSq.getPrice() + ", Date: "
 				+ msftSq.getLastTradeTime().getTime() + "}\n";
-		companyStockQuote.add(msftQuote);
-
-		yahooStockQuote.add(companyStockQuote);
+		yahooStockQuote.add(msftQuote);
 
 		return yahooStockQuote;
 	}
 
-	public KafkaProducer<String, List<String>> createKafkaProducer() {
-		String bootstrapServers = "127.0.0.1:9092";
+	public KafkaProducer<String,String> createKafkaProducer() {
+		//String bootstrapServers = "127.0.0.1:9092";
+		String bootstrapServers = "localhost:9092";
 
 		// Create Producer Properties
 		Properties properties = new Properties();
@@ -120,7 +119,7 @@ public class YahooStockQuoteAPI implements Runnable {
 		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
 		// Create Producer
-		KafkaProducer<String, List<String>> producer = new KafkaProducer<String, List<String>>(properties);
+		KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
 		return producer;
 	}
 }

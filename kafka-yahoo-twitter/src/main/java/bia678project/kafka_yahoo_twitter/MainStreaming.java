@@ -11,8 +11,8 @@ public class MainStreaming {
 		twitterThread.start();
 		yahooThread.start();
 		
-		Thread kafkaTwitterConsumer = new Thread(new KafkaConsumerThread("twitter_tweets", "Group1"));
-		Thread kafkaYahooConsumer = new Thread(new KafkaConsumerThread("yahoo_stock_quote", "Group2"));
+		Thread kafkaTwitterConsumer = new Thread(new KafkaConsumerThread("twitter_tweets","console-consumer-twitterapp"));
+		Thread kafkaYahooConsumer = new Thread(new KafkaConsumerThread("yahoo_stock_quote","console-consumer-yahooapp"));
 		
 		kafkaTwitterConsumer.start();
 		kafkaYahooConsumer.start();

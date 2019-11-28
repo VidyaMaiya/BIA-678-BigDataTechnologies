@@ -31,11 +31,11 @@ import com.twitter.hbc.httpclient.auth.OAuth1;
 
 public class TwitterProducer implements Runnable {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
-	String consumerKey;
-	String consumerSecret;
-	String token;
-	String secret;
-	List<String> terms = Lists.newArrayList("stock", "price"); // following terms in twiiter
+	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
+	String consumerSecret = "WW7aWlIdp1XKVgklPgVfMbJG1ROSG0QxyHgPc8N7SIqSdZmLrq";
+	String token = "828212092666720257-1XdAnwQyEmI4jjO2TnDOqifN8s31iWg";
+	String secret = "mwCm05P96lTF9uLiomS1cKJnFQbIuJ0GMdczCzAVABHbB";
+	List<String> terms = Lists.newArrayList("INTC", "BABA", "TSLA", "AIR.PA", "GOOG", "MSFT"); // following terms in twiiter
 
 	public TwitterProducer() {
 		System.out.println("Starting Twitter Task");
@@ -47,7 +47,7 @@ public class TwitterProducer implements Runnable {
 
 	public void run() {
 		//Read twitter config file
-		readTwitterConfigProperties();
+		//readTwitterConfigProperties();
 		
 		logger.info("Setup");
 		/**
@@ -143,7 +143,8 @@ public class TwitterProducer implements Runnable {
 	}
 
 	public KafkaProducer<String, String> createKafkaProducer() {
-		String bootstrapServers = "127.0.0.1:9092";
+		//String bootstrapServers = "127.0.0.1:9092";
+		String bootstrapServers = "localhost:9092";
 
 		// Create Producer Properties
 		Properties properties = new Properties();

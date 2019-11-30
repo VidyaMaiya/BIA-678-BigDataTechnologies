@@ -53,8 +53,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<!-- Needed to merge create a self-contained jersey/grizzly jar file, 
-					when there may be multiple implementations of a service, subject to runtime 
+				<!-- Needed to merge create a self-contained jersey/grizzly jar file,
+					when there may be multiple implementations of a service, subject to runtime
 					mapping. -->
 				<version>2.1</version>
 				<configuration>
@@ -136,5 +136,39 @@
 			<artifactId>YahooFinanceAPI</artifactId>
 			<version>3.12.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-core_2.11</artifactId>
+			<version>2.3.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-sql_2.11</artifactId>
+			<version>2.3.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.11</artifactId>
+			<version>2.3.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.datastax.spark</groupId>
+			<artifactId>spark-cassandra-connector_2.11</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.datastax.spark</groupId>
+			<artifactId>spark-cassandra-connector-java_2.11</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
 	</dependencies>
 </project>

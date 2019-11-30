@@ -49,7 +49,7 @@ public class TwitterProducer implements Runnable {
 		//Read twitter config file
 		//readTwitterConfigProperties();
 		
-		logger.info("Setup");
+		logger.info("Setup TwitterProducer");
 		/**
 		 * Set up your blocking queues: Be sure to size these properly based on expected
 		 * TPS of your stream Client will put the message into msgQueue
@@ -65,12 +65,12 @@ public class TwitterProducer implements Runnable {
 
 		// add a shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			logger.info("stopping application");
+			logger.info("stopping twitter producer application");
 			logger.info("Shutting down twitter client");
 			client.stop();
-			logger.info("Closing Producer");
+			logger.info("Closing Twitter Producer");
 			producer.close();
-			logger.info("Done!");
+			logger.info("Done closing twitter producer!");
 		}));
 
 		// loop to send twitter to kafka
@@ -91,13 +91,13 @@ public class TwitterProducer implements Runnable {
 					public void onCompletion(RecordMetadata metadata, Exception exception) {
 						// TODO Auto-generated method stub
 						if (exception != null) {
-							logger.error("Something bad happened", exception);
+							logger.error("Something bad happened in twitter producer", exception);
 						}
 					}
 				});
 			}
 		}
-		logger.info("End of application");
+		logger.info("End of Twitter Producer application");
 	}
 
 	public void readTwitterConfigProperties() {

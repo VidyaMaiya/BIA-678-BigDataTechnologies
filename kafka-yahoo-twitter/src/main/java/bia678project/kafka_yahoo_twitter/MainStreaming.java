@@ -6,14 +6,16 @@ public class MainStreaming {
 
     public static void main(String[] args) {
         DataStreamingService dss = DataStreamingService.getSparkContext(KAFKA_BROKER, pullingDuration);
+        
         Thread twitterThread = new Thread(new TwitterProducer());
-
         twitterThread.start();
+        
         YahooStockQuote yahooStock = new YahooStockQuote();
         Thread yahooStockProducer = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                	//Fetches data from YahooFinance API and writes them to Message Queue
                     yahooStock.produce();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
@@ -21,8 +23,20 @@ public class MainStreaming {
                 }
             }
         });
+        Thread yahooStockConsumer = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					//Reads data from Message Queue, then Kafaka producer writes them to Kafka Topic
+					yahooStock.consume();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
         yahooStockProducer.start();
-
+        yahooStockConsumer.start();
 
 
         try {

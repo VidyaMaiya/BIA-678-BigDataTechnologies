@@ -50,9 +50,9 @@ public class YahooStockQuote {
 					}
 					Stock companyStock = stocks.get(symbol);
 					StockQuote companySq = companyStock.getQuote();
-					String intcQuote = "{Symbol: " + companySq.getSymbol() + ", Price:" + companySq.getPrice()
+					String companyQuote = "{Symbol: " + companySq.getSymbol() + ", Price:" + companySq.getPrice()
 							+ ", Date: " + companySq.getLastTradeTime().getTime() + "} \n";
-					msgQueue.add(intcQuote);
+					msgQueue.add(companyQuote);
 					notify();
 					Thread.sleep(1000);
 				}

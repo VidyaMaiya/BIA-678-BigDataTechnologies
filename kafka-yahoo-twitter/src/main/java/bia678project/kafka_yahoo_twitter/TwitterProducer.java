@@ -31,10 +31,10 @@ import com.twitter.hbc.httpclient.auth.OAuth1;
 
 public class TwitterProducer implements Runnable {
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class.getName());
-	String consumerKey = "9ITUSEAMB6Y78GjrvbPg4kfGf";
-	String consumerSecret = "WW7aWlIdp1XKVgklPgVfMbJG1ROSG0QxyHgPc8N7SIqSdZmLrq";
-	String token = "828212092666720257-1XdAnwQyEmI4jjO2TnDOqifN8s31iWg";
-	String secret = "mwCm05P96lTF9uLiomS1cKJnFQbIuJ0GMdczCzAVABHbB";
+	String consumerKey = "";
+	String consumerSecret = "";
+	String token = "";
+	String secret = "";
 	List<String> terms = Lists.newArrayList("INTC", "BABA", "TSLA", "AIR.PA", "GOOG", "MSFT"); // following terms in twiiter
 
 	public TwitterProducer() {
